@@ -11,9 +11,13 @@ import {ratingController} from "./modules/ratingController";
 import {signInController, signUpController} from "./modules/sign";
 import {getData} from "./modules/getData";
 import {API_URL} from "./modules/const";
+import {renderModal} from "./modules/renderModal";
 
 
-const init = () => {
+const init = async () => {
+	await getCategory();
+	renderList();
+
 	const eventModalSignIn = modalController({
 		modal: '.modal_sign-in',
 		btnOpen: '.header__auth-btn_sign-in',
@@ -33,7 +37,7 @@ const init = () => {
 		btnClose: '.modal__close',
 		handlerOpenModal: async ({handler, modalElem}) => {
 			const data = await getData(`${API_URL}/api/service/${handler.dataset.id}`);
-			console.log(data);
+			renderModal(modalElem, data);
 			const comments = document.querySelectorAll('.review__text');
 
 			comments.forEach((comment) => {
@@ -66,11 +70,7 @@ const init = () => {
 	showPassword();
 	choicesController();
 
-
-	getCategory();
-	renderList();
 	searchControl();
-	ratingController();
 
 	signUpController(eventModalSignUp.closeModal);
 
